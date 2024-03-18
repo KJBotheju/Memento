@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "118606710549",
+    "project_id": "album-ac1c0",
+    "storage_bucket": "album-ac1c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118606710549:android:a3be76653b89237f590b1c",
+        "android_client_info": {
+          "package_name": "com.example.album"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdozvZGRX4PeSvQzJhmJedo8yoRQuQMjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
