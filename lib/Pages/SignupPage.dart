@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, sort_child_properties_last
 
 import 'package:album/Pages/HomePage.dart';
 import 'package:album/Pages/SigninPage.dart';
@@ -293,11 +293,9 @@ class _SignupPageState extends State<SignupPage> {
         'userId': userCredential.user!.uid,
         'username': _usernameController.text,
         'email': _emailController.text,
-        // You might not want to store the password in plain text for security reasons
-        // 'password': _passwordController.text,
+        'password': _passwordController.text,
       });
 
-      // Display success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Sign Up successful!'),
@@ -305,13 +303,11 @@ class _SignupPageState extends State<SignupPage> {
         ),
       );
 
-      // Navigate to the home page
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     } catch (e) {
-      // Display error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
