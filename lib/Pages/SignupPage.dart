@@ -242,10 +242,15 @@ class _SignupPageState extends State<SignupPage> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => SigninPage()),
+                        MaterialPageRoute(builder: (context) => SignInPage()),
                       );
                     },
-                    child: Text('Sign in'),
+                    child: Text(
+                      'Sign in',
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
               ),
