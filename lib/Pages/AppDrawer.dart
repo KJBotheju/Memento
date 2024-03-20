@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+import 'package:album/Pages/PrivateAlbum.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -30,8 +33,7 @@ class _AppDrawerState extends State<AppDrawer> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage(
-                      'Assets/images/splash.jpg'), // Add your image asset path here
+                  backgroundImage: AssetImage('Assets/images/splash.jpg'),
                 ),
                 SizedBox(height: 8),
                 Text(
@@ -60,7 +62,10 @@ class _AppDrawerState extends State<AppDrawer> {
               'Private Album',
             ),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => PrivateAlbum()),
+              );
             },
           ),
           ListTile(

@@ -1,23 +1,24 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors
-import 'package:album/Pages/AddImage.dart';
-import 'package:album/Pages/AppDrawer.dart';
+// ignore_for_file: prefer_const_constructors
+
+import 'package:album/Pages/HomePage.dart';
+import 'package:album/Pages/PrivateImage.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+class PrivateAlbum extends StatefulWidget {
+  const PrivateAlbum({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<PrivateAlbum> createState() => _PrivateAlbumState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PrivateAlbumState extends State<PrivateAlbum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          'Memento',
+          'Gallery',
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -27,6 +28,15 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(20),
           ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
         ),
       ),
       body: Stack(
@@ -41,7 +51,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => AddImage()),
+                  MaterialPageRoute(builder: (context) => PrivateImage()),
                 );
               },
               backgroundColor: Colors.blue,
@@ -51,7 +61,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: const AppDrawer(),
     );
   }
 }
