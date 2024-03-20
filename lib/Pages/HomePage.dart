@@ -1,5 +1,12 @@
+// ignore_for_file: prefer_final_fields
+
+import 'dart:io';
+import 'package:album/Pages/AddImage.dart';
 import 'package:album/Pages/AppDrawer.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -37,7 +44,10 @@ class _HomePageState extends State<HomePage> {
             right: 16, // Adjust the position as needed
             child: FloatingActionButton(
               onPressed: () {
-                // Add functionality to handle adding images
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddImage()),
+                );
               },
               backgroundColor: Colors.blue,
               foregroundColor: Colors.black,
