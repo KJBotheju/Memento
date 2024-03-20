@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
 import 'package:album/Pages/PrivateAlbum.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -11,6 +13,28 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
+  late String username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUsername();
+  }
+
+  void fetchUsername() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .get();
+
+      setState(() {
+        username = userSnapshot['username'] ?? '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -44,7 +68,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                 ),
                 Text(
-                  'Kavinda',
+                  username,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
