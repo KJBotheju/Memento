@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:album/Pages/PrivateAlbum.dart';
+import 'package:album/Pages/SigninPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,18 @@ class _AppDrawerState extends State<AppDrawer> {
       setState(() {
         username = userSnapshot['username'] ?? '';
       });
+    }
+  }
+
+  Future<void> _signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignInPage()),
+      );
+    } catch (e) {
+      print('Error during sign out: $e');
     }
   }
 
@@ -94,9 +107,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             title: Text('Logout'),
-            onTap: () {
-              Navigator.pop(context);
-            },
+            onTap: _signOut,
           ),
         ],
       ),
