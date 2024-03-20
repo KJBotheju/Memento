@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_final_fields, prefer_const_constructors
 import 'package:album/Pages/AddImage.dart';
 import 'package:album/Pages/AppDrawer.dart';
+import 'package:album/Pages/Body.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,28 +30,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          const Center(
-            child: Text("my album"),
-          ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddImage()),
-                );
-              },
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.black,
-              child: Icon(Icons.add),
-            ),
-          ),
-        ],
-      ),
+      body: Body(),
       drawer: const AppDrawer(),
     );
   }
