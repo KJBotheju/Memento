@@ -1,17 +1,36 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:album/Pages/HomePage.dart';
 import 'package:album/Pages/PrivateImage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PrivateAlbum extends StatefulWidget {
-  const PrivateAlbum({super.key});
+  const PrivateAlbum({Key? key});
 
   @override
   State<PrivateAlbum> createState() => _PrivateAlbumState();
 }
 
 class _PrivateAlbumState extends State<PrivateAlbum> {
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserId();
+  }
+
+  void fetchUserId() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      userId = user.uid;
+    } else {
+      userId = '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +60,35 @@ class _PrivateAlbumState extends State<PrivateAlbum> {
       ),
       body: Stack(
         children: [
-          const Center(
-            child: Text("my album"),
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('PrivateImage')
+                .where('userId', isEqualTo: userId)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                return ListView.builder(
+                  padding: EdgeInsets.all(4),
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var imageUrl = snapshot.data!.docs[index]['image_url'];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return Center(child: Text('No images available'));
+              }
+            },
           ),
           Positioned(
             bottom: 16,
