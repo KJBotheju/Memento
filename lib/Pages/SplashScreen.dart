@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
+import 'package:album/Pages/HomePage.dart';
 import 'package:album/Pages/SigninPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,12 +30,12 @@ class _SplashScreenState extends State<SplashScreen>
       if (user != null) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SignInPage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SignInPage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
     });
