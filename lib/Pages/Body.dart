@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:album/Pages/AddImage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Body extends StatelessWidget {
   const Body({Key? key}) : super(key: key);
@@ -86,6 +87,22 @@ class LikeButton extends StatefulWidget {
 class _LikeButtonState extends State<LikeButton> {
   int likeCount = 0;
   bool liked = false;
+  late String currentUserId;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCurrentUserId();
+  }
+
+  void fetchCurrentUserId() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      currentUserId = user.uid;
+    } else {
+      currentUserId = '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,12 +132,25 @@ class _LikeButtonState extends State<LikeButton> {
                           .doc(widget.documentId)
                           .update({'likes': likeCount});
 
+                      // Check if the user has already liked this image
                       FirebaseFirestore.instance
                           .collection('PublicImage')
                           .doc(widget.documentId)
                           .collection('Likes')
-                          .add({
-                        'timestamp': Timestamp.now(),
+                          .where('userId', isEqualTo: currentUserId)
+                          .get()
+                          .then((QuerySnapshot querySnapshot) {
+                        if (querySnapshot.size == 0) {
+                          // User has not liked this image yet, so add the like
+                          FirebaseFirestore.instance
+                              .collection('PublicImage')
+                              .doc(widget.documentId)
+                              .collection('Likes')
+                              .add({
+                            'userId': currentUserId,
+                            'timestamp': Timestamp.now(),
+                          });
+                        }
                       });
                     });
                   }
