@@ -23,8 +23,7 @@ class Body extends StatelessWidget {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   var imageUrl = snapshot.data!.docs[index]['image_url'];
-                  var documentId =
-                      snapshot.data!.docs[index].id; // Unique document ID
+                  var documentId = snapshot.data!.docs[index].id;
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 4),
@@ -84,6 +83,7 @@ class LikeButton extends StatefulWidget {
 
 class _LikeButtonState extends State<LikeButton> {
   int likeCount = 0;
+  bool liked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -104,26 +104,27 @@ class _LikeButtonState extends State<LikeButton> {
             children: [
               IconButton(
                 onPressed: () {
-                  setState(() {
-                    likeCount++;
-                    // Update Firestore with the new like count
-                    FirebaseFirestore.instance
-                        .collection('PublicImage')
-                        .doc(widget.documentId)
-                        .update({'likes': likeCount});
+                  if (!liked) {
+                    setState(() {
+                      likeCount++;
+                      liked = true;
+                      FirebaseFirestore.instance
+                          .collection('PublicImage')
+                          .doc(widget.documentId)
+                          .update({'likes': likeCount});
 
-                    // Also, update the Like collection to store like data
-                    FirebaseFirestore.instance
-                        .collection('PublicImage')
-                        .doc(widget.documentId)
-                        .collection('Likes')
-                        .add({
-                      'timestamp': Timestamp.now(),
+                      FirebaseFirestore.instance
+                          .collection('PublicImage')
+                          .doc(widget.documentId)
+                          .collection('Likes')
+                          .add({
+                        'timestamp': Timestamp.now(),
+                      });
                     });
-                  });
+                  }
                 },
                 icon: Icon(Icons.favorite),
-                color: Colors.red,
+                color: liked ? Colors.red : Colors.grey,
               ),
               Text('$likeCount'),
             ],
