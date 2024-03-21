@@ -38,7 +38,7 @@ class _SignupPageState extends State<SignupPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'Assets/images/splash.jpg',
+                'Assets/images/splash.png',
                 width: 200,
                 height: 180,
               ),

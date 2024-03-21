@@ -154,7 +154,7 @@ class SingInPageState extends State<SignInPage> {
             child: Column(
               children: <Widget>[
                 Image.asset(
-                  'Assets/images/splash.jpg',
+                  'Assets/images/splash.png',
                   height: 200,
                   width: 150,
                 ),

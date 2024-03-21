@@ -70,7 +70,7 @@ class _AppDrawerState extends State<AppDrawer> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage('Assets/images/splash.jpg'),
+                  backgroundImage: AssetImage('Assets/images/splash.png'),
                 ),
                 SizedBox(height: 8),
                 Text(

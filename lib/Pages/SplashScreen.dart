@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
                 opacity: 1,
                 duration: Duration(seconds: 1),
                 child: Image.asset(
-                  'Assets/images/splash.jpg',
+                  'Assets/images/splash.png',
                   height: 150,
                   width: 150,
                 ),
