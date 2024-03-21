@@ -54,6 +54,7 @@ class _AddImageState extends State<AddImage> {
       await FirebaseFirestore.instance.collection('PublicImage').add({
         'userId': userId,
         'image_url': imageUrl,
+        'likes': 0,
         'timestamp': FieldValue.serverTimestamp(),
       });
       ScaffoldMessenger.of(context).showSnackBar(

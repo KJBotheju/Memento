@@ -1,6 +1,6 @@
-import 'package:album/Pages/AddImage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:album/Pages/AddImage.dart';
 
 class Body extends StatelessWidget {
   const Body({Key? key}) : super(key: key);
@@ -23,11 +23,27 @@ class Body extends StatelessWidget {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   var imageUrl = snapshot.data!.docs[index]['image_url'];
+                  var documentId =
+                      snapshot.data!.docs[index].id; // Unique document ID
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 4),
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
+                    child: Card(
+                      margin: EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                          ButtonBar(
+                            alignment: MainAxisAlignment.center,
+                            children: [
+                              LikeButton(documentId: documentId),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -53,6 +69,69 @@ class Body extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class LikeButton extends StatefulWidget {
+  final String documentId;
+
+  const LikeButton({required this.documentId});
+
+  @override
+  _LikeButtonState createState() => _LikeButtonState();
+}
+
+class _LikeButtonState extends State<LikeButton> {
+  int likeCount = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
+          .collection('PublicImage')
+          .doc(widget.documentId)
+          .get(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.hasData && snapshot.data!.exists) {
+          likeCount = snapshot.data!['likes'] ?? 0;
+
+          return Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    likeCount++;
+                    // Update Firestore with the new like count
+                    FirebaseFirestore.instance
+                        .collection('PublicImage')
+                        .doc(widget.documentId)
+                        .update({'likes': likeCount});
+
+                    // Also, update the Like collection to store like data
+                    FirebaseFirestore.instance
+                        .collection('PublicImage')
+                        .doc(widget.documentId)
+                        .collection('Likes')
+                        .add({
+                      'timestamp': Timestamp.now(),
+                    });
+                  });
+                },
+                icon: Icon(Icons.favorite),
+                color: Colors.red,
+              ),
+              Text('$likeCount'),
+            ],
+          );
+        } else {
+          return Text('Error: Image not found');
+        }
+      },
     );
   }
 }
