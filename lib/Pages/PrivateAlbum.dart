@@ -1,8 +1,8 @@
 import 'package:album/Pages/HomePage.dart';
-import 'package:album/Pages/PrivateImage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:album/Pages/PrivateImage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PrivateAlbum extends StatefulWidget {
   const PrivateAlbum({Key? key});
@@ -72,15 +72,30 @@ class _PrivateAlbumState extends State<PrivateAlbum> {
                 return ListView.builder(
                   padding: EdgeInsets.all(4),
                   itemCount: snapshot.data!.docs.length,
-                  reverse: true, // Reverse the order
+                  reverse: false,
                   itemBuilder: (context, index) {
                     var imageUrl = snapshot.data!.docs[index]['image_url'];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                      ),
+                    var documentId = snapshot.data!.docs[index].id;
+                    return Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              _deleteImage(context, documentId);
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   },
                 );
@@ -107,5 +122,27 @@ class _PrivateAlbumState extends State<PrivateAlbum> {
         ],
       ),
     );
+  }
+
+  Future<void> _deleteImage(BuildContext context, String documentId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('PrivateImage')
+          .doc(documentId)
+          .delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Image deleted successfully.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

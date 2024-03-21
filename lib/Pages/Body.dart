@@ -27,6 +27,7 @@ class Body extends StatelessWidget {
                 itemBuilder: (context, index) {
                   var imageUrl = snapshot.data!.docs[index]['image_url'];
                   var documentId = snapshot.data!.docs[index].id;
+                  var userId = snapshot.data!.docs[index]['userId'];
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 4),
@@ -34,9 +35,33 @@ class Body extends StatelessWidget {
                       margin: EdgeInsets.all(8),
                       child: Column(
                         children: [
-                          Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
+                          Stack(
+                            children: [
+                              Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                              if (_isCurrentUser(
+                                  userId)) // Check if current user is the owner of the image
+                                Positioned(
+                                  top: 8,
+                                  right: 8,
+                                  child: IconButton(
+                                    icon: Icon(Icons.close),
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.red),
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      _deleteImage(context, documentId);
+                                    },
+                                  ),
+                                ),
+                            ],
                           ),
                           ButtonBar(
                             alignment: MainAxisAlignment.center,
@@ -72,6 +97,44 @@ class Body extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  bool _isCurrentUser(String userId) {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    return currentUser != null && currentUser.uid == userId;
+  }
+
+  Future<void> _deleteImage(BuildContext context, String documentId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('PublicImage')
+          .doc(documentId)
+          .delete();
+      // Also delete related data
+      await FirebaseFirestore.instance
+          .collection('PublicImage')
+          .doc(documentId)
+          .collection('Likes')
+          .get()
+          .then((snapshot) {
+        for (DocumentSnapshot ds in snapshot.docs) {
+          ds.reference.delete();
+        }
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Image deleted successfully.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 
