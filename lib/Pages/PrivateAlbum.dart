@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
-
 import 'package:album/Pages/HomePage.dart';
 import 'package:album/Pages/PrivateImage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -74,6 +72,7 @@ class _PrivateAlbumState extends State<PrivateAlbum> {
                 return ListView.builder(
                   padding: EdgeInsets.all(4),
                   itemCount: snapshot.data!.docs.length,
+                  reverse: true, // Reverse the order
                   itemBuilder: (context, index) {
                     var imageUrl = snapshot.data!.docs[index]['image_url'];
                     return Padding(

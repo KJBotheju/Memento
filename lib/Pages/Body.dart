@@ -10,8 +10,10 @@ class Body extends StatelessWidget {
     return Stack(
       children: [
         StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection('PublicImage').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('PublicImage')
+              .orderBy('timestamp', descending: true)
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
