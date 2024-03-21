@@ -156,6 +156,7 @@ class _LikeButtonState extends State<LikeButton> {
   void initState() {
     super.initState();
     fetchCurrentUserId();
+    checkIfLiked();
   }
 
   void fetchCurrentUserId() {
@@ -165,6 +166,19 @@ class _LikeButtonState extends State<LikeButton> {
     } else {
       currentUserId = '';
     }
+  }
+
+  void checkIfLiked() async {
+    final likedSnapshot = await FirebaseFirestore.instance
+        .collection('PublicImage')
+        .doc(widget.documentId)
+        .collection('Likes')
+        .where('userId', isEqualTo: currentUserId)
+        .get();
+
+    setState(() {
+      liked = likedSnapshot.docs.isNotEmpty;
+    });
   }
 
   @override
@@ -195,25 +209,14 @@ class _LikeButtonState extends State<LikeButton> {
                           .doc(widget.documentId)
                           .update({'likes': likeCount});
 
-                      // Check if the user has already liked this image
+                      // User has not liked this image yet, so add the like
                       FirebaseFirestore.instance
                           .collection('PublicImage')
                           .doc(widget.documentId)
                           .collection('Likes')
-                          .where('userId', isEqualTo: currentUserId)
-                          .get()
-                          .then((QuerySnapshot querySnapshot) {
-                        if (querySnapshot.size == 0) {
-                          // User has not liked this image yet, so add the like
-                          FirebaseFirestore.instance
-                              .collection('PublicImage')
-                              .doc(widget.documentId)
-                              .collection('Likes')
-                              .add({
-                            'userId': currentUserId,
-                            'timestamp': Timestamp.now(),
-                          });
-                        }
+                          .add({
+                        'userId': currentUserId,
+                        'timestamp': Timestamp.now(),
                       });
                     });
                   }
