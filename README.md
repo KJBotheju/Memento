@@ -1,16 +1,9 @@
-# album
+# Memento
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![sign_in](https://github.com/KJBotheju/Memento/assets/117912732/84cc81d6-4d53-470c-925f-33801ea08bdd)
+![public](https://github.com/KJBotheju/Memento/assets/117912732/74cf5cd8-b1b3-4410-bc4b-8ea9792d60ae)
+![appDrawer](https://github.com/KJBotheju/Memento/assets/117912732/f83fa40a-7e73-4dc9-9b6f-4cc449318485)
+![upload](https://github.com/KJBotheju/Memento/assets/117912732/13f46f12-9199-4b7a-b80f-5272fea5448d)
+![private](https://github.com/KJBotheju/Memento/assets/117912732/57959d53-c2ed-4c83-a774-d3eb6e7a9991)
